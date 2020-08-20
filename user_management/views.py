@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django import forms
 from django.contrib.auth import login, authenticate, logout
-from .forms import SignUpForm, LoginForm
+from .forms import SignUpForm, LoginForm, AccountUpdateForm
 from django.urls import reverse_lazy
 from django.views.generic import FormView, CreateView
 
@@ -23,3 +23,20 @@ class SignUpView(CreateView):
         self.object.save()
         return response
 
+def account_view(request):
+    if not request.user.is_authenticated:
+        return redirect('user_management:login')
+    context = {}
+    if request.POST:
+        form = AccountUpdateForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+    else:
+        form = AccountUpdateForm(
+            initial={
+                "email": request.user.email,
+                "username": request.user.username,
+            }
+        )
+    context['account_form'] = form
+    return render(request,'registration/user_profile.html',context)

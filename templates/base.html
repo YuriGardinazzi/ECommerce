@@ -36,7 +36,7 @@
                     </li>
                 {%else %}
                     <li>
-                    <a  class="btn btn-outline-success"  href="">
+                    <a  class="btn btn-outline-success"  href=" {% url 'user_management:account' %}">
                         {{ user.username }}
                     </a>
                     </li>

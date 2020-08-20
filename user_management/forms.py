@@ -25,6 +25,7 @@ class SignUpForm(UserCreationForm):
 class LoginForm(forms.ModelForm):
     password = forms.CharField(label='password', widget=forms.PasswordInput)
 
+
     class Meta:
         model = CustomUser
         fields = ('email', 'password')
@@ -36,3 +37,30 @@ class LoginForm(forms.ModelForm):
 
             if not authenticate(email=email, password=password):
                 raise forms.ValidationError("Credentials are wrong")
+
+
+class AccountUpdateForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ('email', 'username')
+
+    # check email not already in use
+    def clean_email(self):
+        if self.is_valid():
+            email = self.cleaned_data['email']
+            try:
+                account = CustomUser.objects.exclude(pk=self.instance.pk).get(email=email)
+            except CustomUser.DoesNotExist:
+                return email
+            raise forms.ValidationError(f'Email {email} is already in use')
+
+    # check username not already in use
+    def clean_username(self):
+        if self.is_valid():
+            # check of the email
+            username = self.cleaned_data['username']
+            try:
+                account = CustomUser.objects.exclude(pk=self.instance.pk).get(username=username)
+            except CustomUser.DoesNotExist:
+                return username
+            raise forms.ValidationError(f'Username {username} is already in use')
