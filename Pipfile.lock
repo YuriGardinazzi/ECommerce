@@ -14,13 +14,6 @@
         ]
     },
     "default": {
-        "asgiref": {
-            "hashes": [
-                "sha256:7e51911ee147dd685c3c8b805c0ad0cb58d360987b56953878f8c06d2d1c6f1a",
-                "sha256:9fc6fb5d39b8af147ba40765234fa822b39818b12cc80b35ad9b0cef3a476aed"
-            ],
-            "version": "==3.2.10"
-        },
         "decorator": {
             "hashes": [
                 "sha256:41fa54c2a0cc4ba648be4fd43cff00aedf5b9465c9bf18d64325bc225f08f760",
@@ -30,11 +23,11 @@
         },
         "django": {
             "hashes": [
-                "sha256:1a63f5bb6ff4d7c42f62a519edc2adbb37f9b78068a5a862beff858b68e3dc8b",
-                "sha256:2d390268a13c655c97e0e2ede9d117007996db692c1bb93eabebd4fb7ea7012b"
+                "sha256:3e2f5d172215862abf2bac3138d8a04229d34dbd2d0dab42c6bf33876cc22323",
+                "sha256:91f540000227eace0504a24f508de26daa756353aa7376c6972d7920bc339a3a"
             ],
             "index": "pypi",
-            "version": "==3.1"
+            "version": "==2.2.15"
         },
         "django-bootstrap-modal-forms": {
             "hashes": [
