@@ -12,4 +12,5 @@ django-bootstrap-modal-forms = "*"
 django-widget-tweaks = "*"
 self = "*"
 
-
+[requires]
+python_version = "3.5"
