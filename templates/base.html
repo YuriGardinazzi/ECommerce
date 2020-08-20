@@ -36,7 +36,9 @@
                     </li>
                 {%else %}
                     <li>
-                    <a>{{ user.username }}</a>
+                    <a  class="btn btn-outline-success"  href="">
+                        {{ user.username }}
+                    </a>
                     </li>
                     <li>
                         <a type="button" class="btn btn-outline-primary" href="{% url 'user_management:logout' %}">
