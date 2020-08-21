@@ -23,6 +23,7 @@ class SignUpView(CreateView):
         self.object.save()
         return response
 
+
 def account_view(request):
     if not request.user.is_authenticated:
         return redirect('user_management:login')
@@ -36,7 +37,8 @@ def account_view(request):
             initial={
                 "email": request.user.email,
                 "username": request.user.username,
+                "name": request.user.name,
             }
         )
     context['account_form'] = form
-    return render(request,'registration/user_profile.html',context)
+    return render(request, 'registration/user_profile.html', context)

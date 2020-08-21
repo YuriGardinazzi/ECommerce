@@ -25,7 +25,6 @@ class SignUpForm(UserCreationForm):
 class LoginForm(forms.ModelForm):
     password = forms.CharField(label='password', widget=forms.PasswordInput)
 
-
     class Meta:
         model = CustomUser
         fields = ('email', 'password')
@@ -42,7 +41,7 @@ class LoginForm(forms.ModelForm):
 class AccountUpdateForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ('email', 'username')
+        fields = ('email', 'username', 'name')
 
     # check email not already in use
     def clean_email(self):
@@ -64,3 +63,8 @@ class AccountUpdateForm(forms.ModelForm):
             except CustomUser.DoesNotExist:
                 return username
             raise forms.ValidationError(f'Username {username} is already in use')
+
+    def clean_name(self):
+        if self.is_valid():
+            name = self.cleaned_data['name']
+            return name
