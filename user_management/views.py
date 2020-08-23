@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django import forms
@@ -31,6 +32,7 @@ def account_view(request):
     if request.POST:
         form = AccountUpdateForm(request.POST, instance=request.user)
         if form.is_valid():
+            messages.success(request, 'Account Updated')
             form.save()
     else:
         form = AccountUpdateForm(
