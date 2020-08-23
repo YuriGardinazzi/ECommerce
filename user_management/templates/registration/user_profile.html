@@ -4,7 +4,10 @@
     <div class="container">
     <form method="post">{% csrf_token %}
         <div class="form-group">
+            {% if request.user.is_authenticated %}
 
+            <p class="h5"> Account Setting of: {{ user.first_name }} {{ user.last_name }}</p>
+            {% endif %}
             {% if messages %}
                     {% for message in messages %}
                         <div class="alert alert-success" role="alert">
@@ -40,5 +43,13 @@
             <button type="submit" class="btn btn-primary">Save changes</button>
         </div>
     </form>
+
+    {% if request.user.is_authenticated %}
+        {% if request.user.is_vendor%}
+            <h1> LEI E' UN VENDITORE BUONGIORNO</h1>
+        {% else %}
+            <h1> LEI NON E' UN VENDITORE BONASERA</h1>
+        {% endif %}
+    {% endif %}
     </div>
 {% endblock %}

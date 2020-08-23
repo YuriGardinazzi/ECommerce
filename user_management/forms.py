@@ -9,6 +9,9 @@ from ecommerce import settings
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Email'}))
+    first_name = forms.CharField(max_length=30)
+    last_name = forms.CharField(max_length=30)
+    is_vendor = forms.BooleanField(initial=False, required=False,label='Check if you\'re a vendor')
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Choose your password wisely'}))
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Choose your password wisely'}))
 
@@ -19,7 +22,7 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ('email', 'username', 'name', 'password1', 'password2')
+        fields = ('email', 'username', 'first_name', 'last_name', 'is_vendor', 'password1', 'password2')
 
 
 class LoginForm(forms.ModelForm):
@@ -41,7 +44,7 @@ class LoginForm(forms.ModelForm):
 class AccountUpdateForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ('email', 'username', 'name')
+        fields = ('email', 'username')
 
     # check email not already in use
     def clean_email(self):

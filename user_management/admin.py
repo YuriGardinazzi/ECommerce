@@ -1,13 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Person, CustomUser
-
-# Register your models here.
-admin.site.register(Person)
+from .models import CustomUser
 
 
 class CustomAdmin(UserAdmin):
-    list_display = ('email', 'username', 'date_joined', 'last_login', 'is_admin', 'is_staff')
+    list_display = ('email', 'username', 'date_joined', 'last_login','is_vendor', 'is_admin')
     search_field = ('email', 'username')
     readonly_fields = ('date_joined', 'last_login')
     filter_horizontal = ()
