@@ -43,7 +43,6 @@
             <button type="submit" class="btn btn-primary">Save changes</button>
         </div>
     </form>
-
     {% if request.user.is_authenticated %}
         {% if request.user.is_vendor%}
             <h1> LEI E' UN VENDITORE BUONGIORNO</h1>
@@ -51,5 +50,9 @@
             <h1> LEI NON E' UN VENDITORE BONASERA</h1>
         {% endif %}
     {% endif %}
+
+    <p>If you want to change your password  <a href="{% url 'user_management:password_change' %}">Click here</a> </p>
+
     </div>
+
 {% endblock %}

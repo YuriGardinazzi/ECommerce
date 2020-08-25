@@ -8,5 +8,8 @@
           {{ form|crispy}}
           <button type="submit" class="btn btn-primary">Sign in</button>
         </form>
+    <p>
+        If you forgot your password <a href="{% url 'user_management:password_reset' %}"> Click here</a>
+    </p>
     </div>
 {% endblock %}
