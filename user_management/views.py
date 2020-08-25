@@ -7,6 +7,8 @@ from .forms import SignUpForm, LoginForm, AccountUpdateForm
 from django.urls import reverse_lazy
 from django.views.generic import FormView, CreateView
 
+from .models import CustomUser
+
 
 def user_home(request):
     return render('user_home.html')
@@ -30,7 +32,7 @@ def account_view(request):
         return redirect('user_management:login')
     context = {}
     if request.POST:
-        form = AccountUpdateForm(request.POST, instance=request.user)
+        form = AccountUpdateForm(request.POST, request.FILES or None, instance=request.user)
         if form.is_valid():
             messages.success(request, 'Account Updated')
             form.save()

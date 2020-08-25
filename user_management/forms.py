@@ -1,3 +1,4 @@
+from PIL.Image import Image
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate
@@ -11,7 +12,7 @@ class SignUpForm(UserCreationForm):
     email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': 'Email'}))
     first_name = forms.CharField(max_length=30)
     last_name = forms.CharField(max_length=30)
-    is_vendor = forms.BooleanField(initial=False, required=False,label='Check if you\'re a vendor')
+    is_vendor = forms.BooleanField(initial=False, required=False, label='Check if you\'re a vendor')
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Choose your password wisely'}))
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Choose your password wisely'}))
 
@@ -44,7 +45,7 @@ class LoginForm(forms.ModelForm):
 class AccountUpdateForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ('email', 'username')
+        fields = ('email', 'username', 'image')
 
     # check email not already in use
     def clean_email(self):
