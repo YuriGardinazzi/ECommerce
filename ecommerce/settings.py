@@ -27,7 +27,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 if DEBUG:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' #development only
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # development only
 # Application definition
 
 INSTALLED_APPS = [
@@ -116,6 +116,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'user_management/media')  #media upload by user during development
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
@@ -124,4 +126,3 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 AUTH_USER_MODEL = 'user_management.CustomUser'
-

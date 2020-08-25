@@ -6,16 +6,22 @@
         <div class="form-group">
             {% if request.user.is_authenticated %}
 
-            <p class="h5"> Account Setting of: {{ user.first_name }} {{ user.last_name }}</p>
-            {% endif %}
-            {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert alert-success" role="alert">
-                          {{ message }}
-                        </div>
-                    {% endfor %}
-            {% endif %}
+                <p class="h5"> Account Setting of: {{ user.first_name }} {{ user.last_name }}</p>
 
+                {% if {{ user.image.url }} %}
+                    <img src="{{ user.image.url }}" alt="user profile image" width="240">
+                {% else %}
+                    <img src="/static/images/default_picture.png" alt="user profile image" width="240">
+                {% endif %}
+
+                {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-success" role="alert">
+                              {{ message }}
+                            </div>
+                        {% endfor %}
+            {% endif %}
+            {% endif %}
 
             {% for field in account_form %}
                 <p>
