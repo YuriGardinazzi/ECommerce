@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>PRODUCT MANAGEMENT DELL'UTENTE </h1>
+    <h2>{{ user.first_name }}</h2>
+{% endblock %}
