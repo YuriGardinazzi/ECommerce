@@ -42,7 +42,7 @@ def account_view(request):
             initial={
                 "email": request.user.email,
                 "username": request.user.username,
-                "is_vendor": CustomUser.objects.get(pk=request.user.pk).is_vendor
+                "is_vendor": CustomUser.objects.get(pk=request.user.pk).is_vendor #take the attribute Is_vendor of the custom user
             }
         )
     context['account_form'] = form

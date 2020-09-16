@@ -46,14 +46,23 @@ class AccountUpdateForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ('email', 'username', 'image', 'is_vendor')
-
+        widgets = {
+            'image': forms.FileInput(),
+        }
     def __init__(self, *args, **kwargs):
+
         super(AccountUpdateForm, self).__init__(*args, **kwargs)
-        #check if the instance exist
+        self.fields['image'].required = False
+        # check if the instance exist
         if self.instance:
+            # Remove is_vendor field if the user is already a vendor when the form is loads
             if 'initial' in kwargs.keys():
                 if kwargs['initial']['is_vendor']:
                     self.fields.pop('is_vendor')
+            #remove is_vendor field after the form is submitted
+            if self.instance.is_vendor:
+                self.fields.pop('is_vendor')
+
 
     # check email not already in use
     def clean_email(self):
@@ -80,4 +89,3 @@ class AccountUpdateForm(forms.ModelForm):
         if self.is_valid():
             name = self.cleaned_data['name']
             return name
-
