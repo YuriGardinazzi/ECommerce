@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django import forms
 from django.contrib.auth import login, authenticate, logout
 from .forms import SignUpForm, LoginForm, AccountUpdateForm
+from .models import CustomUser
 from django.urls import reverse_lazy
 from django.views.generic import FormView, CreateView
 
@@ -40,7 +41,8 @@ def account_view(request):
         form = AccountUpdateForm(
             initial={
                 "email": request.user.email,
-                "username": request.user.username
+                "username": request.user.username,
+                "is_vendor": CustomUser.objects.get(pk=request.user.pk).is_vendor
             }
         )
     context['account_form'] = form

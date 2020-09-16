@@ -45,7 +45,15 @@ class LoginForm(forms.ModelForm):
 class AccountUpdateForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ('email', 'username', 'image')
+        fields = ('email', 'username', 'image', 'is_vendor')
+
+    def __init__(self, *args, **kwargs):
+        super(AccountUpdateForm, self).__init__(*args, **kwargs)
+        #check if the instance exist
+        if self.instance:
+            if 'initial' in kwargs.keys():
+                if kwargs['initial']['is_vendor']:
+                    self.fields.pop('is_vendor')
 
     # check email not already in use
     def clean_email(self):
@@ -72,3 +80,4 @@ class AccountUpdateForm(forms.ModelForm):
         if self.is_valid():
             name = self.cleaned_data['name']
             return name
+
