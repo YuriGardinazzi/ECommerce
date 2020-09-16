@@ -45,6 +45,14 @@
                             Logout
                         </a>
                     </li>
+                    {% if user.is_vendor  %}
+                        <li>
+                            <a  class="btn btn-outline-success"  href=" {% url 'product_management:product_management' %}">
+                                Products
+                            </a>
+                        </li>
+                    {% endif %}
+
                 {% endif %}
 
             </ul>
