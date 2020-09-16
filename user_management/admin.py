@@ -14,4 +14,4 @@ class CustomAdmin(UserAdmin):
 
 
 admin.site.register(CustomUser, CustomAdmin)
-admin.site.register(Product)
+
