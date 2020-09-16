@@ -1,6 +1,18 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>PRODUCT MANAGEMENT DELL'UTENTE </h1>
-    <h2>{{ user.first_name }}</h2>
+    <div class="container">
+
+    {% if not request.user.is_vendor %}
+
+        <p>
+            Your account is not setup to sell products, change your settings
+        <a href = '{% url 'user_management:account' %}'> Click Here</a>
+        </p>
+    {% else %}
+        {% block dashboard %}
+            {% include 'product_setting/dashboard.html' %}
+        {% endblock %}
+    {% endif %}
+
 {% endblock %}

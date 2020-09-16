@@ -1,0 +1,9 @@
+
+
+<h1>
+    {% if request.user.is_authenticated %}
+    DASHBOARD OF {{ user.first_name}}
+
+    {% endif %}
+
+</h1>
