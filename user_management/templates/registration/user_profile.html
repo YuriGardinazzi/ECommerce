@@ -53,7 +53,7 @@
     {% if request.user.is_authenticated %}
         {% if request.user.is_vendor%}
             <h1> LEI E' UN VENDITORE BUONGIORNO</h1>
-            <a href="{% url 'product_management:product_management' %}"> Prodotti venduti</a>
+            <a href="{% url 'product_management:product_management' request.user.id %}"> Prodotti venduti</a>
         {% else %}
             <h1> LEI NON E' UN VENDITORE BONASERA</h1>
         {% endif %}

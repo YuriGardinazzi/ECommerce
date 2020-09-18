@@ -1,9 +1,50 @@
 
 
 <h1>
-    {% if request.user.is_authenticated %}
-    DASHBOARD OF {{ user.first_name}}
+    <div class="container">
+        <h3 class="display-3">DASHBOARD OF {{ user.first_name}} </h3>
 
-    {% endif %}
+        <table class="table">
+              <thead class="thead-light">
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Discount</th>
+                    <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for product in object_list %}
+                <tr>
+                  <th scope="row">
+                      <img class="img-thumbnail"src="{{ product.image.url }}"/>
+                  </th>
+                  <td>{{ product.name }}</td>
+                  <td>{{ product.quantity }}</td>
+                  <td>{{ product.price }}</td>
+                  <td>{{ product.discount }}</td>
+                  <td>
+                      <a class="btn btn-primary"
+                          href="{% url 'product_management:product_detail' product.id %}">
+                         <i class="material-icons">info</i>
+                      </a>
+                      <a class="btn btn-danger">
+                        <i class="material-icons">delete_forever</i>
+                      </a>
+                      <a class="btn btn-success">
+                         <i class="material-icons">brush</i>
+                      </a>
+                  </td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+
+
+    <a class="btn btn-primary" href="{% url 'product_management:product_add' %}"><i class='fas fa-plus mr-1'></i>Add Product</a>
+    </div>
+
 
 </h1>

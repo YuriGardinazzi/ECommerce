@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container">
+
+        {% if not request.user.is_vendor %}
+
+            <p>
+                Your user cannot see these informations >:C
+            <a href = '{% url 'home' %}'> Home</a>
+            </p>
+        {% else %}
+
+                <p>
+                    Product:  {{ product.name }} <br>
+                    Description: {{ product.description }} </br>
+                    Price: {{ product.price }}
+                </p>
+
+
+
+        {% endif %}
+    <div class="container">
+{% endblock %}
