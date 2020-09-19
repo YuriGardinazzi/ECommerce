@@ -24,4 +24,4 @@ class ProductCrispyForm(SubmitButtonMixin):
 
     class Meta:
         model = Product
-        fields = ('name','description','image','price','discount','description','available','quantity','category')
+        exclude = ('producer',)

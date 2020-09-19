@@ -1,11 +1,12 @@
 
 
-<h1>
-    <div class="container">
         <h3 class="display-3">DASHBOARD OF {{ user.first_name}} </h3>
-
-        <table class="table">
-              <thead class="thead-light">
+    <div class="row col-sm-12">
+        <a class="btn btn-primary" href="{% url 'product_management:product_add' %}"><i class='fas fa-plus mr-1'></i>Add Product</a>
+    </div>
+    <div class="row col-sm-12">
+    <table class="table col-md-12" id = "products_table">
+            <thead class="thead-light">
                 <tr>
                     <th scope="col"></th>
                     <th scope="col">Name</th>
@@ -14,37 +15,61 @@
                     <th scope="col">Discount</th>
                     <th scope="col">Actions</th>
                 </tr>
-              </thead>
-              <tbody>
-              {% for product in object_list %}
-                <tr>
-                  <th scope="row">
-                      <img class="img-thumbnail"src="{{ product.image.url }}"/>
-                  </th>
-                  <td>{{ product.name }}</td>
-                  <td>{{ product.quantity }}</td>
-                  <td>{{ product.price }}</td>
-                  <td>{{ product.discount }}</td>
-                  <td>
-                      <a class="btn btn-primary"
-                          href="{% url 'product_management:product_detail' product.id %}">
-                         <i class="material-icons">info</i>
-                      </a>
-                      <a class="btn btn-danger">
-                        <i class="material-icons">delete_forever</i>
-                      </a>
-                      <a class="btn btn-success">
-                         <i class="material-icons">brush</i>
-                      </a>
-                  </td>
-                </tr>
-              {% endfor %}
-              </tbody>
-            </table>
+            </thead>
+            <tbody>
 
-
-    <a class="btn btn-primary" href="{% url 'product_management:product_add' %}"><i class='fas fa-plus mr-1'></i>Add Product</a>
+            </tbody>
+    </table>
     </div>
 
 
-</h1>
+
+{% block javascript %}
+     <script>
+
+     console.log("SONO LO SCRIPT   1");
+     $(document).ready(function (){
+         console.log("ID producer: "+ {{ request.user.id }});
+
+         $.ajax({
+
+             url : '{% url 'product_management:product_list' %}',
+             method : 'POST',
+             data: {
+                 'producer_id' : {{ request.user.id }},
+                 'csrfmiddlewaretoken': '{{ csrf_token }}',
+             },
+             dataType: 'json',
+             success : function (answer){
+                 list = JSON.parse(JSON.stringify(answer))[0];
+                 //console.log("lista: ", list.products_list[0].name);
+                 for(let i=0; i < list.products_list.length; i++){
+
+
+                     var actions = '<a class="btn btn-primary"\n' +
+                         '                     <a href= "/product/management/'+list.products_list[i].id+ '/detail">'+
+                         '                         <i class="material-icons">info</i>\n' +
+                         '                      </a>\n' +
+                         '                      <a class="btn btn-danger">\n' +
+                         '                        <i class="material-icons">delete_forever</i>\n' +
+                         '                      </a>\n' +
+                         '                      <a class="btn btn-success">\n' +
+                         '                         <i class="material-icons">brush</i>\n' +
+                         '           </a>';
+                     var row = '<tr>'+
+                            '<td>'+'<img width="100" height="70" class="img-fluid"src="/media/'+list.products_list[i].image+'"/>'+ '</td>'+
+                            '<td>'+list.products_list[i].name + '</td>'+
+                            '<td>'+list.products_list[i].quantity + '</td>'+
+                            '<td>'+list.products_list[i].price + '</td>'+
+                            '<td>'+list.products_list[i].discount + '</td>'+
+                            '<td>'+actions+ '</td>'+
+                            '</tr>';
+                     $('#products_table > tbody:first').append(row);
+                     console.log(list.products_list[i].name);
+                 }
+             },
+         });
+     });
+     console.log("Arrivo dopo le ajax :D");
+  </script>
+{% endblock %}

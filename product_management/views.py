@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 
 from user_management.models import CustomUser
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 from .forms import ProductCrispyForm
 from .models import Product
@@ -26,7 +26,7 @@ class ProductDetail(DetailView):
     template_name = 'product_setting/detail.html'
 
     def get_queryset(self, *args, **kwargs):
-        return Product.objects.filter(producer=self.kwargs['pk'])
+        return Product.objects.filter(id=self.kwargs['pk'])
 
 
 class ProductAdd(CreateView):
@@ -37,6 +37,7 @@ class ProductAdd(CreateView):
     # fields = '__all__'
     # fields = ('first_name', 'middle_name', 'last_name')
     # success_url = reverse_lazy('product_management:product_management',kwargs.get('pk'))
+    success_url = reverse_lazy('product_management:product_management')
 
     def form_valid(self, form):
         obj = form.save(commit=False)
@@ -44,16 +45,14 @@ class ProductAdd(CreateView):
         obj.save()
         return super(ProductAdd, self).form_valid(form)
 
-    def get_success_url(self):
-        # if you are passing 'pk' from 'urls' to 'DeleteView' for company
-        # capture that 'pk' as companyid and pass it to 'reverse_lazy()' function
-        producer = self.kwargs['pk']
-        return reverse_lazy('product_management:product_management', kwargs={'pk': producer})
 
 
-'''
-    context = {}
-    custom_user = CustomUser.objects.all()
-    context['custom_user'] = custom_user
-    return render(request, 'product_setting/product_management', context)
-'''
+
+def get_vendor_products(request):
+
+    producer = request.POST.get('producer_id')
+    products_list = Product.objects.filter(producer=producer).values()
+    data = []
+    data.append({'products_list': list(products_list)})
+    print(data)
+    return JsonResponse(data, safe=False)
