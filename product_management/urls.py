@@ -8,5 +8,6 @@ urlpatterns = [
     path('management/', login_required(views.ProductManagement.as_view()), name='product_management'),
     path('management/<int:pk>/detail', views.ProductDetail.as_view(), name='product_detail'),
     path('management/add', views.ProductAdd.as_view(),name='product_add'),
-    path('ajax/product_list',views.get_vendor_products, name='product_list')
+    path('ajax/product_list',views.get_vendor_products, name='product_list'),
+    path('ajax/delete_product',views.delete_element, name='delete_product')
 ]

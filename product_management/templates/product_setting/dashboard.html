@@ -1,6 +1,5 @@
 
-
-        <h3 class="display-3">DASHBOARD OF {{ user.first_name}} </h3>
+    <h3 class="display-3">DASHBOARD OF {{ user.first_name}} </h3>
     <div class="row col-sm-12">
         <a class="btn btn-primary" href="{% url 'product_management:product_add' %}"><i class='fas fa-plus mr-1'></i>Add Product</a>
     </div>
@@ -23,11 +22,37 @@
     </div>
 
 
-
 {% block javascript %}
      <script>
 
-     console.log("SONO LO SCRIPT   1");
+     function generateTable(list){
+       for(let i=0; i < list.products_list.length; i++){
+
+
+                     var actions = '<a class="btn btn-primary"\n' +
+                         '                     <a href= "/product/management/'+list.products_list[i].id+ '/detail">'+
+                         '                         <i class="material-icons">info</i>\n' +
+                         '                      </a>\n' +
+                         '                      <a class="deleteButton btn btn-danger"  data-toggle="modal" data-target="#DeleteModal" id="Product'+i+'">\n' +
+                         '                        <i class="material-icons">delete_forever</i>\n' +
+                         '                      </a>\n' +
+                         '                      <a class="btn btn-success">\n' +
+                         '                         <i class="material-icons">brush</i>\n' +
+                         '           </a>';
+                     var row = '<tr id="row'+list.products_list[i].id+'">'+
+                            '<td>'+'<img width="100" height="70" class="img-fluid"src="/media/'+list.products_list[i].image+'"/>'+ '</td>'+
+                            '<td>'+list.products_list[i].name + '</td>'+
+                            '<td>'+list.products_list[i].quantity + '</td>'+
+                            '<td>'+list.products_list[i].price + '</td>'+
+                            '<td>'+list.products_list[i].discount + '</td>'+
+                            '<td>'+actions+ '</td>'+
+                            '</tr>';
+                     $('#products_table > tbody:first').append(row);
+                 }
+         return;
+        };
+
+     var list;
      $(document).ready(function (){
          console.log("ID producer: "+ {{ request.user.id }});
 
@@ -43,33 +68,68 @@
              success : function (answer){
                  list = JSON.parse(JSON.stringify(answer))[0];
                  //console.log("lista: ", list.products_list[0].name);
-                 for(let i=0; i < list.products_list.length; i++){
-
-
-                     var actions = '<a class="btn btn-primary"\n' +
-                         '                     <a href= "/product/management/'+list.products_list[i].id+ '/detail">'+
-                         '                         <i class="material-icons">info</i>\n' +
-                         '                      </a>\n' +
-                         '                      <a class="btn btn-danger">\n' +
-                         '                        <i class="material-icons">delete_forever</i>\n' +
-                         '                      </a>\n' +
-                         '                      <a class="btn btn-success">\n' +
-                         '                         <i class="material-icons">brush</i>\n' +
-                         '           </a>';
-                     var row = '<tr>'+
-                            '<td>'+'<img width="100" height="70" class="img-fluid"src="/media/'+list.products_list[i].image+'"/>'+ '</td>'+
-                            '<td>'+list.products_list[i].name + '</td>'+
-                            '<td>'+list.products_list[i].quantity + '</td>'+
-                            '<td>'+list.products_list[i].price + '</td>'+
-                            '<td>'+list.products_list[i].discount + '</td>'+
-                            '<td>'+actions+ '</td>'+
-                            '</tr>';
-                     $('#products_table > tbody:first').append(row);
-                     console.log(list.products_list[i].name);
-                 }
+                 generateTable(list);
              },
          });
      });
-     console.log("Arrivo dopo le ajax :D");
+
+     $(document).on('click',".deleteButton", function(event) {
+
+         id = event.currentTarget.id.replace('Product','');
+         console.log(id);
+         $('#modalTitle').text(list.products_list[id].name);
+         $('#modalBody').text(list.products_list[id].description);
+         $('#modalElementId').text(list.products_list[id].id);
+      });
+     $(document).on('click',"#deleteConfirm", function(event) {
+        event.preventDefault();
+        elementID = $('#modalElementId').text();
+        $.ajax({
+            url :'{% url 'product_management:delete_product' %}',
+
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                'product_id' : elementID,
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+            },
+            success : function(){
+                $('#DeleteModal').modal('toggle');
+                $('#row'+elementID).remove();
+
+                alert('Product removed');
+            },
+            error : function(err){
+                $('#DeleteModal').modal('toggle');
+                console.log(err);
+                alert('Something went wrong');
+            }
+        });
+
+     });
+
+
   </script>
 {% endblock %}
+<!-- Modal -->
+<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="DeleteModalLabel">Are you sure to delete this Product?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h3 id="modalTitle"></h3>
+        <p id="modalElementId" style="visibility:hidden"></p>
+        <p id="modalBody"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" id="deleteConfirm" class="btn btn-primary">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>

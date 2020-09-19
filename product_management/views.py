@@ -56,3 +56,15 @@ def get_vendor_products(request):
     data.append({'products_list': list(products_list)})
     print(data)
     return JsonResponse(data, safe=False)
+
+def delete_element(request):
+    productID = request.POST.get('product_id')
+    successDeletion = True
+    data=[]
+    try:
+        productToDelete = Product.objects.filter(id=productID)
+        productToDelete.delete()
+    except Product.DoesNotExist:
+        print("element ", productID, " not found")
+        successDeletion = False
+    return JsonResponse({"success": successDeletion})
