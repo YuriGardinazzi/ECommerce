@@ -6,6 +6,19 @@ from django.forms import ModelChoiceField
 from .models import Product, MyCategory
 
 
+
+
+class SubmitButtonMixin(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.id:
+            self.helper.inputs[0].value = 'Update'
+            self.helper.inputs[0].field_classes = 'btn btn-warning'
+        else:
+            self.helper.inputs[0].value = 'Create'
+            self.helper.inputs[0].field_classes = 'btn btn-success'
+
+
 # Personalized field that show just the name of the object Category
 class CategoryChoiceField(ModelChoiceField):
 
@@ -13,7 +26,7 @@ class CategoryChoiceField(ModelChoiceField):
         return '{name}'.format(name=obj.name)
 
 
-class ProductCrispyForm(forms.ModelForm):
+class ProductCrispyForm(SubmitButtonMixin):
     category = CategoryChoiceField(queryset=MyCategory.objects.all())
 
     helper = FormHelper()
@@ -24,3 +37,4 @@ class ProductCrispyForm(forms.ModelForm):
     class Meta:
         model = Product
         exclude = ('producer',)
+

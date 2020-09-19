@@ -1,4 +1,6 @@
-from django.shortcuts import render
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 
 from user_management.models import CustomUser
@@ -7,7 +9,7 @@ from django.http import HttpResponse, JsonResponse
 from .forms import ProductCrispyForm
 from .models import Product
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
 
 # Create your views here.
@@ -68,3 +70,9 @@ def delete_element(request):
         print("element ", productID, " not found")
         successDeletion = False
     return JsonResponse({"success": successDeletion})
+
+class ProductChange(LoginRequiredMixin,UpdateView):
+    model = Product
+    template_name = 'product_setting/update_product.html'
+    form_class = ProductCrispyForm
+    success_url = reverse_lazy('product_management:product_management')
