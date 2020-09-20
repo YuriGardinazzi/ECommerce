@@ -43,10 +43,11 @@
                             '<td>'+'<img width="100" height="70" class="img-fluid"src="/media/'+list.products_list[i].image+'"/>'+ '</td>'+
                             '<td>'+list.products_list[i].name + '</td>'+
                             '<td>'+list.products_list[i].quantity + '</td>'+
-                            '<td>'+list.products_list[i].price + '</td>'+
-                            '<td>'+list.products_list[i].category + '</td>'+
+                            '<td>'+list.products_list[i].price + '&euro;</td>'+
+                            '<td>'+list.products_list[i].category_id + '</td>'+
                             '<td>'+actions+ '</td>'+
                             '</tr>';
+                     console.log(list.products_list[i]);
                      $('#products_table > tbody:first').append(row);
                  }
          return;
@@ -54,8 +55,6 @@
 
      var list;
      $(document).ready(function (){
-         console.log("ID producer: "+ {{ request.user.id }});
-
          $.ajax({
 
              url : '{% url 'product_management:product_list' %}',

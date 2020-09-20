@@ -1,4 +1,4 @@
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from user_management.models import CustomUser
 
@@ -17,14 +17,14 @@ class Product(models.Model):
     name = models.CharField(max_length=50)
     image = models.ImageField(upload_to='product_images/')
     price = models.FloatField(validators=[MinValueValidator(0.0001)])
-    #discount = models.FloatField(default=0,validators=[MinValueValidator(0.0)])
     description = models.TextField(max_length=500)
-    #available = models.BooleanField(default=False)
     quantity = models.PositiveIntegerField(default=1)
     producer = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     category = models.ForeignKey(MyCategory,on_delete=models.PROTECT)
 
-    def get_discounted_price(self):
-        return self.price - self.price * self.discount
-
-
+class Review(models.Model):
+    id = models.AutoField(primary_key=True)
+    review = models.TextField(max_length=400)
+    rating = models.IntegerField(validators=[MaxValueValidator(5), MinValueValidator(0)])
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)

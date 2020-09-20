@@ -3,11 +3,174 @@
 
 {% block content %}
     <div class="container">
-        <p>
-            Product:  {{ product.name }} <br>
-            Description: {{ product.description }} </br>
-            Price: {{ product.price }}
-        </p>
+    <div class="row">
+        <div class="col">
+            <div class="text-center">
+             <img src="{{ product.image.url }}"  class="img-fluid" alt="user profile image" height="240">
+            </div>
+        </div>
+        <div class="col">
+                <table class="table table-unbordered">
+                    <tr>
+                        <td colspan="2"><bold> {{ product.name }}</bold> </td>
+                    </tr>
+                    <tr>
+                        <td>Description: </td>
+                        <td>{{ product.description }}</td>
+                    </tr>
+                    <tr>
+                        <td>Price: </td>
+                        <td>{{ product.price }} &euro;</td>
+                    </tr>
+                    <tr>
+                        <td>Ratings</td>
+                        <td id="product_ratings">0/5</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            {% if product.quantity == 0 %}
+                                OUT OF SALE
+                            {% else %}
+                                <button class="btn btn-primary">BUY</button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
 
+            </p>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col">
+            {% if request.user.is_authenticated %}
+                <button class="btn btn-warning" data-toggle="modal" data-target="#ReviewModal"> ADD REVIEW</button>
+            {% else %}
+                <button class="btn btn-light"><a href="{% url 'user_management:login' %}">LOG IN TO ADD A REVIEW</a></button>
+            {% endif %}
+
+            <table class="table table-bordered" id="reviewTable">
+            <tbody>
+
+            </tbody>
+            </table>
+        </div>
+    </div>
     <div class="container">
+    <div class="modal fade" id="ReviewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="DeleteModalLabel">What do you think about this Product?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <form>
+              <div class="form-group">
+               <label>Rating</label>
+                  <select class="form-control" id="rating">
+                      <option value="0">0</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                  </select>
+              </div>
+              <div class="form-group">
+                  <label for="exampleFormControlTextarea1" >Review:</label>
+                  <textarea class="form-control" id='review' maxlength="400"></textarea>
+              </div>
+          </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" id="reviewConfirm" class="btn btn-primary">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block javascript %}
+    <script>
+
+         $(document).ready(function (){
+
+             //Generate Review Table Ajax
+             $.ajax({
+
+                 url : '{% url 'product_management:review_list' %}',
+                 method : 'POST',
+                 data: {
+                     'product_id' : {{ product.id }},
+                     'csrfmiddlewaretoken': '{{ csrf_token }}',
+                 },
+                 dataType: 'json',
+                 success : function (answer){
+                     list = JSON.parse(JSON.stringify(answer))[0];
+                     for(let i = 0; i <list.reviews_list.length; i++){
+                        var newRow = ' <tr> <td> Rating: '+list.reviews_list[i].rating +'</td><td>User: '+list.reviews_list[i].user_id+' </td>'+
+                             '<td>'+list.reviews_list[i].review+'</td>'+
+                             '</tr>';
+                        console.log(newRow);
+                         $('#reviewTable > tbody').append(newRow);
+                     }
+                     //generateTable(list);
+                     },
+                 });
+
+             //Generate Average Rating
+             $.ajax({
+                 url : '{% url 'product_management:average_rating' %}',
+                 method : 'POST',
+                 data: {
+                     'product_id' : {{ product.id }},
+                     'csrfmiddlewaretoken': '{{ csrf_token }}',
+                 },
+                 dataType: 'json',
+                 success : function (answer){
+                     list= JSON.parse(JSON.stringify(answer));
+                     if(list.average_rating === 'undefined' || list.average_rating == null){
+                         $('#product_ratings').text('0/5');
+
+                     }else{
+                         $('#product_ratings').text(list.average_rating+'/5');
+                     }
+                     }
+                });
+
+         });
+
+
+        $(document).on('click',"#reviewConfirm", function(event) {
+        event.preventDefault();
+        $.ajax({
+            url :'{% url 'product_management:add_review' %}',
+
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                'product_id' : {{ product.id }},
+                'user_id' : {{ user.id }},
+                'rating': $('#rating').val(),
+                'review': $('#review').val(),
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+            },
+            success : function(){
+                $('#ReviewModal').modal('toggle');
+                location.reload();
+
+            },
+            error : function(err){
+                $('#ReviewModal').modal('toggle');
+                console.log(err);
+                alert('Something went wrong');
+            }
+        });
+
+     });
+    </script>
 {% endblock %}

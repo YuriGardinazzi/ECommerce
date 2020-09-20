@@ -2,65 +2,74 @@
 
 {% block content %}
     <div class="container">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-success" role="alert">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-    <form method="post" enctype="multipart/form-data">{% csrf_token %}
-        <div class="form-group">
-            {% if request.user.is_authenticated %}
-
-                <p class="h5"> Account Setting of: {{ user.first_name }} {{ user.last_name }}</p>
-
-                {% if  user.image.url  is not None %}
-                    <img src="{{ user.image.url }}" alt="user profile image" width="240">
-                {% else %}
-                    <img src="/static/images/default_picture.png" alt="user profile image" width="240">
-
-                {% endif %}
-
-            {% endif %}
-
-            {% for field in account_form %}
-                <p>
-                    {{field.label_tag}}
-                    {{field}}
-
-                    {% if field.help_text %}
-                        <small style="color: grey;">{{field.help_text}}</small>
+        <div class="row "> <h1>Account Settings - {{ user.first_name }} {{ user.last_name }}</h1></div>
+        <div class="row ">
+            <div class="col border-right"-sm>
+                <div class="text-center">
+                    {% if  user.image.url  is not None %}
+                        <img src="{{ user.image.url }}"  class="img-fluid" alt="user profile image" height="240">
+                    {% else %}
+                        <img src="/static/images/default_picture.png" alt="user profile image" height="240">
                     {% endif %}
-
-                </p>
-            {% endfor %}
-
-            {% for field in account_form %}
-                {% for error in field.errors %}
-                    <p style="color: red;">{{error}}</p>
-                {% endfor %}
-            {% endfor %}
-
-            {% if account_form.non_field_errors %}
-                <div style="color:red;">
-                    <p>{{account_form.non_field_errors}}</p>
                 </div>
-            {% endif %}
-            <button type="submit" class="btn btn-primary">Save changes</button>
-        </div>
-    </form>
-    {% if request.user.is_authenticated %}
-        {% if request.user.is_vendor%}
-            <h1> LEI E' UN VENDITORE BUONGIORNO</h1>
-            <a href="{% url 'product_management:product_management'%}"> Prodotti venduti</a>
-        {% else %}
-            <h1> LEI NON E' UN VENDITORE BONASERA</h1>
-        {% endif %}
-    {% endif %}
 
-    <p>If you want to change your password  <a href="{% url 'user_management:password_change' %}">Click here</a> </p>
+            </div>
+          <div class="col-sm">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-success" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <form method="post" enctype="multipart/form-data">{% csrf_token %}
+            <div class="form-group">
+
+                {% for field in account_form %}
+                    <p>
+                        {{field.label_tag}}
+                        {{field}}
+
+                        {% if field.help_text %}
+                            <small style="color: grey;">{{field.help_text}}</small>
+                        {% endif %}
+
+                    </p>
+                {% endfor %}
+
+                {% for field in account_form %}
+                    {% for error in field.errors %}
+                        <p style="color: red;">{{error}}</p>
+                    {% endfor %}
+                {% endfor %}
+
+                {% if account_form.non_field_errors %}
+                    <div style="color:red;">
+                        <p>{{account_form.non_field_errors}}</p>
+                    </div>
+                {% endif %}
+                <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+        </form>
+
+            <p>If you want to change your password  <a href="{% url 'user_management:password_change' %}">Click here</a> </p>
+
+        </div>
+        </div>
+        <div class="row justify-content-center border-top">
+            {% if request.user.is_authenticated %}
+            {% if request.user.is_vendor%}
+                <p> Check your Products
+                                <button type="button" class="btn btn-light">
+                 <a href="{% url 'product_management:product_management'%}"> Products</a>
+                </button>
+                </p>
+
+            {% endif %}
+            {% endif %}
+        </div>
 
     </div>
+
 
 {% endblock %}
