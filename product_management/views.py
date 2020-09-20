@@ -61,7 +61,6 @@ def get_vendor_products(request):
     products_list = Product.objects.filter(producer=producer).values()
     data = []
     data.append({'products_list': list(products_list)})
-    print(data)
     return JsonResponse(data, safe=False)
 
 
@@ -73,7 +72,6 @@ def delete_element(request):
         productToDelete = Product.objects.filter(id=productID)
         productToDelete.delete()
     except Product.DoesNotExist:
-        print("element ", productID, " not found")
         successDeletion = False
     return JsonResponse({"success": successDeletion})
 
@@ -95,10 +93,14 @@ def add_review(request):
 def get_all_reviews(request):
     if request.method == 'POST':
         data = []
+        authors_of_reviews = []
         product_id = request.POST.get('product_id')
         review_list = Review.objects.filter(product_id=product_id).values()
-        data.append({'reviews_list': list(review_list)})
-        print(data)
+        for single_review in review_list:
+            print(CustomUser.objects.get(id=single_review['user_id']))
+            authors_of_reviews.append(CustomUser.objects.get(id=single_review['user_id']).username)
+        data.append({'reviews_list': list(review_list), 'authors':list(authors_of_reviews)})
+
         return JsonResponse(data, safe=False)
     return JsonResponse({"success": False})
 

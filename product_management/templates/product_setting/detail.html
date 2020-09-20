@@ -111,8 +111,9 @@
                  dataType: 'json',
                  success : function (answer){
                      list = JSON.parse(JSON.stringify(answer))[0];
+                     console.log(list);
                      for(let i = 0; i <list.reviews_list.length; i++){
-                        var newRow = ' <tr> <td> Rating: '+list.reviews_list[i].rating +'</td><td>User: '+list.reviews_list[i].user_id+' </td>'+
+                        var newRow = ' <tr> <td> Rating: '+list.reviews_list[i].rating +'</td><td>User: '+list.authors[i]+' </td>'+
                              '<td>'+list.reviews_list[i].review+'</td>'+
                              '</tr>';
                         console.log(newRow);
