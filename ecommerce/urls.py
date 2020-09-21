@@ -23,6 +23,7 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/', include('user_management.urls')),
+    path('',include('sales.urls')),
     path('', views.home, name='home'),
     path('product/',include('product_management.urls'))
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
