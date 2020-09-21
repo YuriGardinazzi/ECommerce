@@ -19,6 +19,7 @@ class Product(models.Model):
     price = models.FloatField(validators=[MinValueValidator(0.0001)])
     description = models.TextField(max_length=500)
     quantity = models.PositiveIntegerField(default=1)
+    shipment = models.FloatField(default=0, validators=[MinValueValidator(0)])
     producer = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     category = models.ForeignKey(MyCategory,on_delete=models.PROTECT)
 

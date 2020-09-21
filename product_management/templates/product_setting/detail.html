@@ -31,7 +31,8 @@
                             {% if product.quantity == 0 %}
                                 OUT OF SALE
                             {% else %}
-                                <button class="btn btn-primary">BUY</button>
+                                <button class="btn btn-primary" data-toggle="modal" data-target="#BuyProduct">BUY</button>
+                                Available: {{ product.quantity }}
                             {% endif %}
                         </td>
                     </tr>
@@ -57,11 +58,12 @@
         </div>
     </div>
     <div class="container">
+    <!--Modal add Review-->
     <div class="modal fade" id="ReviewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="DeleteModalLabel">What do you think about this Product?</h5>
+        <h5 class="modal-title" id="ReviewModalLabel">What do you think about this Product?</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -93,12 +95,82 @@
     </div>
   </div>
 </div>
+    <!-- MOdal Buy Item-->
+    <div class="modal fade" id="BuyProduct" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="BuyProductModalLabel">Buy {{ product.name }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <form>
+              <div class="table">
+                  <table class="table-bordered">
+                      <tr>
+                          <td>Product</td>
+                          <td>{{ product.name }}</td>
+                      </tr>
+                      <tr>
+                          <td>Quantity/td>
+                          <td><input type="number" id="quantityField" max="{{ product.quantity }}" value="1" min="1"></td>
+                      </tr>
+                      <tr>
+                          <td>Price</td>
+                          <td>{{ product.quantity }}</td>
+                      </tr>
+                      <tr>
+                          <td>Shipment</td>
+                          <td>{{ product.shipment }}</td>
+                      </tr>
+                      <tr>
+                          <td>Total</td>
+                          <td id="Total"></td>
+                      </tr>
+                      <tr>
+                          <td colspan="2">Credit card informations</td>
+                      </tr>
+                      <tr>
+                          <td>Name</td>
+                          <td> <input type="text" placeholder=""></td>
+                      </tr>
+                      <tr>
+                          <td>Credit Card Number</td>
+                          <td><input id="ccn" type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="19" placeholder="xxxx xxxx xxxx xxxx">
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>Expiration (mm/yy)</td>
+                          <td> <input id="expirationdate" type="text" pattern="[0-9]*" inputmode="numeric"> </td>
+                      </tr>
+                      <tr>
+                          <td>Security Code</td>
+                          <td> <input id="securitycode" type="text" pattern="[0-9]*" inputmode="numeric"></td>
+                      </tr>
+                  </table>
+
+              </div>
+
+          </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" id="reviewConfirm" class="btn btn-primary">Buy</button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 {% block javascript %}
     <script>
 
          $(document).ready(function (){
-
+             //Calculate total
+             var total = {{ product.price }} * $('#quantityField').val() + {{ product.shipment }};
+             $('#Total').text(+total);
              //Generate Review Table Ajax
              $.ajax({
 
@@ -145,7 +217,10 @@
 
          });
 
-
+        $(document).on('change',"#quantityField", function(event){
+             var total = {{ product.price }} * $('#quantityField').val() + {{ product.shipment }};
+             $('#Total').text(+total);
+        });
         $(document).on('click',"#reviewConfirm", function(event) {
         event.preventDefault();
         $.ajax({
