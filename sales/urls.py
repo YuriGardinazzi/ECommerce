@@ -5,5 +5,6 @@ from . import views
 app_name = "sales"
 urlpatterns = [
     path('sales', views.sales_page, name="sales_page"),
+    path('ajax/get_sales',views.get_all_sales, name="get_sales"),
     path('ajax/purchase', views.purchase_product,name="purchase")
 ]

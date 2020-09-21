@@ -2,5 +2,64 @@
 
 
 {% block content %}
-<h1>TEST SALES URL</h1>
+<div class="container">
+    <div class="row">
+        <div class="col">
+                <h3>Orders</h3>
+                <div class="table col-md-12 ">
+                    <table class="table-bordered" id="salesTable">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Product</th>
+                                <th scope="col">Buyer</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Total</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Send</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascript %}
+<script>
+     $(document).ready(function (){
+         $.ajax({
+
+             url : '{% url 'sales:get_sales' %}',
+             method : 'POST',
+             data: {
+                 'producer_id' : {{ request.user.id }},
+                 'csrfmiddlewaretoken': '{{ csrf_token }}',
+             },
+             dataType: 'json',
+             success : function (answer){
+                 list = JSON.parse(JSON.stringify(answer));
+                console.log(list.purchase_list[0].length);
+                for(let i = 0; i < list.purchase_list.length; i++){
+                     for(let j = 0; j < list.purchase_list[i].length; j++){
+                         console.log('i: '+i +' j: '+j);
+                         var row = '<tr>' +
+                             '<td>'+list.purchase_list[i][j].id+'</td>' +
+                             '<td>'+list.purchase_list[i][j].product_id+'</td>' +
+                             '<td>'+list.purchase_list[i][j].buyer_id+'</td>' +
+                             '<td>'+list.purchase_list[i][j].quantity+'</td>' +
+                             '<td>'+list.purchase_list[i][j].total+'&euro; </td>' +
+                             '<td>'+list.purchase_list[i][j].date+'</td>' +
+                             '<td>'+list.purchase_list[i][j].is_sent+'</td>' +
+                             '</tr>';
+                         $('#salesTable > tbody').append(row);
+                     }
+                 }
+             },
+         });
+     });
+</script>
 {% endblock %}

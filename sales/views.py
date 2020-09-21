@@ -29,3 +29,18 @@ def purchase_product(request):
         data = {'success': True}
 
     return JsonResponse(data)
+
+
+def get_all_sales(request):
+    data = {'success': False}
+    if request.method == 'POST':
+        vendor_id = request.POST.get('producer_id')
+        vendor_products = Product.objects.filter(producer_id=vendor_id)
+        data = []
+        print(vendor_products)
+        for product in vendor_products:
+            sales = Purchase.objects.filter(product=product).values()
+            data.append(list(sales))
+
+        return JsonResponse({'purchase_list': list(data)}, safe=False)
+    return JsonResponse(data)
