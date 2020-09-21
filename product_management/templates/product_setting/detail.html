@@ -95,7 +95,8 @@
     </div>
   </div>
 </div>
-    <!-- MOdal Buy Item-->
+
+    <!-- Modal Buy Item-->
     <div class="modal fade" id="BuyProduct" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -163,6 +164,26 @@
     </div>
   </div>
 </div>
+
+    <!-- Modal Order confirmed -->
+    <div class="modal" tabindex="-1" role="dialog" id="orderConfirmed">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Order Confirmed</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Your order has been confirmed</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 {% block javascript %}
     <script>
@@ -215,6 +236,7 @@
                      }
                 });
 
+
          });
 
         $(document).on('change',"#quantityField", function(event){
@@ -242,6 +264,32 @@
             },
             error : function(err){
                 $('#ReviewModal').modal('toggle');
+                console.log(err);
+                alert('Something went wrong');
+            }
+        });
+
+     });
+        $(document).on('click',"#buyConfirm", function(event) {
+        event.preventDefault();
+        $.ajax({
+            url :'{% url 'sales:purchase' %}',
+
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                'product_id' : {{ product.id }},
+                'user_id' : {{ user.id }},
+                'quantity': $('#quantityField').val(),
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+            },
+            success : function(){
+                $('#BuyProduct').modal('toggle');
+                $('#orderConfirmed').modal('toggle');
+                location.reload();
+            },
+            error : function(err){
+                $('#BuyProduct').modal('toggle');
                 console.log(err);
                 alert('Something went wrong');
             }
