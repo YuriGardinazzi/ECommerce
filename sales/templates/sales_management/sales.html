@@ -10,8 +10,8 @@
                     <table class="table-bordered" id="salesTable">
                         <thead class="thead-light">
                             <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Product</th>
+                                <th scope="col">Order ID</th>
+                                <th scope="col">Product ID</th>
                                 <th scope="col">Buyer</th>
                                 <th scope="col">Quantity</th>
                                 <th scope="col">Total</th>
@@ -46,10 +46,10 @@
                 console.log(list.purchase_list[0].length);
                 for(let i = 0; i < list.purchase_list.length; i++){
                      for(let j = 0; j < list.purchase_list[i].length; j++){
-                         console.log('i: '+i +' j: '+j);
+                         var pID = list.purchase_list[i][j].product_id;
                          var row = '<tr>' +
                              '<td>'+list.purchase_list[i][j].id+'</td>' +
-                             '<td>'+list.purchase_list[i][j].product_id+'</td>' +
+                             '<td> <a href="/product/management/'+pID+'/detail">'+pID+'</a></td>' +
                              '<td>'+list.purchase_list[i][j].buyer_id+'</td>' +
                              '<td>'+list.purchase_list[i][j].quantity+'</td>' +
                              '<td>'+list.purchase_list[i][j].total+'&euro; </td>' +
