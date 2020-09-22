@@ -17,6 +17,7 @@
                                 <th scope="col">Total</th>
                                 <th scope="col">Date</th>
                                 <th scope="col">Send</th>
+                                <th scope="col">Received</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -54,6 +55,7 @@
                              '<td>'+list.purchase_list[i][j].total+'&euro; </td>' +
                              '<td>'+list.purchase_list[i][j].date+'</td>' +
                              '<td>'+list.purchase_list[i][j].is_sent+'</td>' +
+                             '<td>'+list.purchase_list[i][j].is_received+'</td>' +
                              '</tr>';
                          $('#salesTable > tbody').append(row);
                      }

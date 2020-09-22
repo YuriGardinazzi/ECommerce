@@ -9,6 +9,7 @@ class Purchase(models.Model):
     buyer = models.ForeignKey(CustomUser, on_delete=models.PROTECT)
     product = models.ForeignKey(Product,on_delete=models.PROTECT)
     is_sent = models.BooleanField(default=False)
+    is_received = models.BooleanField(default=False)
     quantity = models.PositiveIntegerField(default=1,validators=[MinValueValidator(1)])
     total = models.FloatField()
    # producer = models.ForeignKey(CustomUser, on_delete=models.PROTECT)
