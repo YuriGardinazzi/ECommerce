@@ -9,6 +9,9 @@ def sales_page(request):
     context = {}
     return render(request, 'sales_management/sales.html', context)
 
+def orders(request):
+    context = {}
+    return render(request, 'sales_management/orders.html', context)
 
 def purchase_product(request):
     data = {'success': False}
