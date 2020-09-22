@@ -47,3 +47,14 @@ def get_all_sales(request):
 
         return JsonResponse({'purchase_list': list(data)}, safe=False)
     return JsonResponse(data)
+
+def get_all_orders(request):
+    data = {'success': False}
+    if request.method == 'POST':
+        data = []
+        user_id = request.POST.get('user_id')
+        orders = Purchase.objects.filter(buyer_id = user_id).values()
+        #data.append(list(orders))
+
+        return JsonResponse({'purchase_list': list(orders)}, safe=False)
+    return JsonResponse(data)

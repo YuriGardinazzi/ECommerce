@@ -1,6 +1,64 @@
 {% extends 'base.html' %}
 {% block content %}
-     <h1>Your Orders</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1>Your Orders</h1>
+                <div class="table col-md-12 ">
+                    <table class="table-bordered" id="ordersTable">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Product</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Total</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Send</th>
+                                <th scope="col">Received</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
 {% endblock %}
 {% block javascript %}
+    <script>
+     $(document).ready(function (){
+         $.ajax({
+
+             url : '{% url 'sales:get_orders' %}',
+             method : 'POST',
+             data: {
+                 'user_id' : {{ request.user.id }},
+                 'csrfmiddlewaretoken': '{{ csrf_token }}',
+             },
+             dataType: 'json',
+             success : function (answer){
+                 list = JSON.parse(JSON.stringify(answer));
+                console.log(list);
+                for(let i = 0; i < list.purchase_list.length; i++){
+                         var row = '<tr>' +
+                             '<td>'+list.purchase_list[i].id+'</td>' +
+                             '<td>'+list.purchase_list[i].product_id+'</td>' +
+                             '<td>'+list.purchase_list[i].quantity+'</td>' +
+                             '<td>'+list.purchase_list[i].total+'&euro; </td>' +
+                             '<td>'+list.purchase_list[i].date+'</td>' +
+                             '<td>'+list.purchase_list[i].is_sent+'</td>' +
+                             '<td>'+list.purchase_list[i].is_received+'</td>' +
+                             '</tr>';
+                         $('#ordersTable > tbody').append(row);
+
+                 }
+             },
+         });
+     });
+    </script>
+
+
 {% endblock %}
