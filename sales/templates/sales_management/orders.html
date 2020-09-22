@@ -26,10 +26,34 @@
         </div>
 
     </div>
+        <!--Send Received Confirm  -->
+    <div class="modal" tabindex="-1" role="dialog" id="SendReceive">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Send confirmation</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <p>Did you received this product? </p>
+            <span id="modalElementId" style="visibility:hidden"></span>
+          </div>
+          <div class="modal-footer">
+             <button type="button" id="sendConfirm"class="btn btn-primary">Yes</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+    </div>
+    </div>
+
 {% endblock %}
 {% block javascript %}
     <script>
-     $(document).ready(function (){
+        //Generate table
+        $(document).ready(function (){
          $.ajax({
 
              url : '{% url 'sales:get_orders' %}',
@@ -44,14 +68,28 @@
                 console.log(list);
                 for(let i = 0; i < list.purchase_list.length; i++){
                          var pID = list.purchase_list[i].product_id;
+                         var orderID = list.purchase_list[i].id;
+
+                         var isSent = 'Not sent';
+                         if (list.purchase_list[i].is_sent === true) {
+                             isSent = 'Sent';
+                         }
+                         var isReceived = 'Not received';
+                         if (list.purchase_list[i].is_received === true){
+                             isReceived = 'Received';
+                         }else{
+                             if(isSent){
+                                 isReceived = '<button data-toggle="modal" data-target="#SendReceive" class=" btn btn-outline-info arrivedButton" id="purchase'+orderID+'"> Click here if it has arrived</button>';
+                             }
+                         }
                          var row = '<tr>' +
                              '<td>'+list.purchase_list[i].id+'</td>' +
                              '<td> <a href="/product/management/'+pID+'/detail">'+pID+'</a></td>' +
                              '<td>'+list.purchase_list[i].quantity+'</td>' +
                              '<td>'+list.purchase_list[i].total+'&euro; </td>' +
                              '<td>'+list.purchase_list[i].date+'</td>' +
-                             '<td>'+list.purchase_list[i].is_sent+'</td>' +
-                             '<td>'+list.purchase_list[i].is_received+'</td>' +
+                             '<td>'+isSent+'</td>' +
+                             '<td>'+isReceived+'</td>' +
                              '</tr>';
                          $('#ordersTable > tbody').append(row);
 
@@ -59,6 +97,35 @@
              },
          });
      });
+
+        $(document).on('click',".arrivedButton", function(event) {
+            var id = event.currentTarget.id.replace("purchase","");
+            $('#modalElementId').text(id);
+        });
+
+      $(document).on('click',"#sendConfirm", function(event) {
+          event.preventDefault();
+          var id = $('#modalElementId').text();
+          $.ajax({
+              url : '{% url "sales:send_received" %}',
+              method : 'POST',
+              data:  {
+                 'purchase_id' : id,
+                 'csrfmiddlewaretoken': '{{ csrf_token }}',
+              },
+              dataType :'json',
+              success : function (){
+                  $('#SendReceive').toggle();
+                  location.reload();
+              },
+              error : function (){
+                  alert('something went wrong');
+              }
+          });
+
+      });
+
+
     </script>
 
 

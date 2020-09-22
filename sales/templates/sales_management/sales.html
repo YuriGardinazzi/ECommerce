@@ -28,10 +28,32 @@
         </div>
     </div>
 </div>
+    <!--Send Item Modal  -->
+    <div class="modal" tabindex="-1" role="dialog" id="SendItem">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Send Item</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <p>Do you want to ship this order? </p>
+            <span id="modalElementId" style="visibility:hidden"></span>
+          </div>
+          <div class="modal-footer">
+             <button type="button" id="sendConfirm"class="btn btn-primary">Send</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+    </div>
 {% endblock %}
 {% block javascript %}
 <script>
      $(document).ready(function (){
+         //generate sales table
          $.ajax({
 
              url : '{% url 'sales:get_sales' %}',
@@ -47,6 +69,19 @@
                 for(let i = 0; i < list.purchase_list.length; i++){
                      for(let j = 0; j < list.purchase_list[i].length; j++){
                          var pID = list.purchase_list[i][j].product_id;
+                         var orderID = list.purchase_list[i][j].id;
+                         var isSent = 'Sent';
+                         if (!list.purchase_list[i][j].is_sent){
+                             isSent = '<button  data-toggle="modal" data-target="#SendItem" class="btn btn-outline-info sendButton" id="purchase'+orderID+'"> Send product</button>';
+                         }
+                         var isReceived = 'Not received';
+                         if(list.purchase_list[i][j].is_received){
+                                 isReceived = 'Received';
+                         } else if(!list.purchase_list[i][j].is_sent){
+                             isReceived = 'Not sent';
+                         }else{
+                            isReceived ='Sent but not received';
+                         }
                          var row = '<tr>' +
                              '<td>'+list.purchase_list[i][j].id+'</td>' +
                              '<td> <a href="/product/management/'+pID+'/detail">'+pID+'</a></td>' +
@@ -54,8 +89,8 @@
                              '<td>'+list.purchase_list[i][j].quantity+'</td>' +
                              '<td>'+list.purchase_list[i][j].total+'&euro; </td>' +
                              '<td>'+list.purchase_list[i][j].date+'</td>' +
-                             '<td>'+list.purchase_list[i][j].is_sent+'</td>' +
-                             '<td>'+list.purchase_list[i][j].is_received+'</td>' +
+                             '<td>'+isSent+'</td>' +
+                             '<td>'+isReceived+'</td>' +
                              '</tr>';
                          $('#salesTable > tbody').append(row);
                      }
@@ -63,5 +98,34 @@
              },
          });
      });
+     $(document).on('click',".sendButton", function(event) {
+         var id = event.currentTarget.id.replace("purchase","");
+        $('#modalElementId').text(id);
+     });
+      $(document).on('click',"#sendConfirm", function(event) {
+          event.preventDefault();
+          var id = $('#modalElementId').text();
+          $.ajax({
+              url : '{% url "sales:send_product" %}',
+              method : 'POST',
+              data:  {
+                 'purchase_id' : id,
+                 'csrfmiddlewaretoken': '{{ csrf_token }}',
+              },
+              dataType :'json',
+              success : function (){
+                  $('#SendItem').toggle();
+                  console.log("SUCCESS");
+                  location.reload();
+              },
+              error : function (){
+                  alert('something went wrong');
+              }
+
+
+
+          });
+
+      });
 </script>
 {% endblock %}
