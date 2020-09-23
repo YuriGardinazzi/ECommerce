@@ -20,15 +20,16 @@
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light " style="background-color: #e3f2fd;">
-        <a class="navbar-brand" href="#">Navbar</a>
+        <a class="navbar-brand" href="#">Ucommerce</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
+
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="{% url 'home' %}">Home </a>
+                    <a class="nav-link" href="{% url 'home' %}"><img src="/static/images/logo.png" width="30" height="30" class="d-inline-block align-top" alt=""> </a>
                 </li>
                 {% if not request.user.is_authenticated %}
                     <li>
@@ -73,6 +74,12 @@
 
             </ul>
             <form class="form-inline my-2 my-lg-0">
+                <div class="form-check-inline">
+                 <select class="custom-select" id="formCategories">
+                     <option value="all">All categories</option>
+                </select>
+            </div>
+
                 <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
@@ -84,7 +91,26 @@
     <!-- End Navbar -->
     {% block content %}
     {% endblock %}
-
+    <script>
+    $(document).ready(function(){
+        $.ajax({
+            url: '{% url 'categories_search_form' %}',
+            method : 'POST',
+            data: {
+                 'csrfmiddlewaretoken': '{{ csrf_token }}',
+             },
+            dataType: 'json',
+             success : function (answer){
+                 list = JSON.parse(JSON.stringify(answer));
+                 console.log(list.categories);
+                 for(let i=0; i < list.categories.length; i++){
+                     $('#formCategories').append('<option value="'+list.categories[i].name+'">'+list.categories[i].name+'</option>')
+                 }
+                 //generateTable(list);
+             },
+        });
+    });
+    </script>
     <!-- Optional JavaScript -->
     {% block javascript %}
     {% endblock %}
