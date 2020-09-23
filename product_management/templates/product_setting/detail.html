@@ -31,7 +31,14 @@
                             {% if product.quantity == 0 %}
                                 OUT OF SALE
                             {% else %}
-                                <button class="btn btn-primary" data-toggle="modal" data-target="#BuyProduct">BUY</button>
+                                {% if request.user.is_authenticated %}
+                                     <button class="btn btn-primary" data-toggle="modal" data-target="#BuyProduct">BUY</button>
+                                {% else %}
+                                    <a class="btn btn-primary" href="{% url 'user_management:login' %}">LOGIN TO BUY</a>
+                                {% endif %}
+
+
+
                                 Available: {{ product.quantity }}
                             {% endif %}
                         </td>

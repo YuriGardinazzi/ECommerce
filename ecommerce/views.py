@@ -17,7 +17,25 @@ def home(request):
 
 
 def get_search(request):
-    return render(request, 'search.html')
+    context = {}
+    if request.method == 'POST':
+        query = request.POST['query']
+        category = request.POST['category']
+        if category == 'all' and query == '':
+            products = Product.objects.all()
+            context['products'] = products
+        elif category != 'all' and query == '':
+            products = Product.objects.filter(category_id=category)
+            context['products'] = products
+        elif category == 'all':
+            print(" category all - query presente")
+            products = Product.objects.filter(name__contains=query)
+            context['products'] = products
+        else:
+            print("qualche categoria, query presente")
+            products = Product.objects.filter(name__contains=query, category_id=category)
+            context['products'] = products
+    return render(request, 'search.html', context)
 
 
 def get_categories(request):
