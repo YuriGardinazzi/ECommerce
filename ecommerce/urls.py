@@ -25,6 +25,7 @@ urlpatterns = [
     path('user/', include('user_management.urls')),
     path('',include('sales.urls')),
     path('', views.home, name='home'),
+    path('search/',views.get_search, name="search"),
+    path('ajax/get_categories', views.get_categories, name="categories_search_form"),
     path('product/',include('product_management.urls')),
-    path('ajax/get_categories', views.get_categories, name="categories_search_form")
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

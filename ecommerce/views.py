@@ -16,9 +16,13 @@ def home(request):
     return render(request, 'home.html', context)
 
 
+def get_search(request):
+    return render(request, 'search.html')
+
+
 def get_categories(request):
+    data  = {'success' : False}
     if request.method == 'POST':
         categories = MyCategory.objects.all().values()
-        print(categories)
         data = {'categories': list(categories)}
     return JsonResponse(data, safe=False)
