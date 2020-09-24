@@ -4,7 +4,8 @@
     <div class="container">
     </div>
     <h3>Research for {{ request.POST.query }} Category: {{ request.POST.category }}</h3>
-    <table class="table table-striped">
+    {% if  suggested_items%}
+        <table class="table table-striped">
       <thead>
         <tr>
           <th scope="col">Suggested Items</th>
@@ -26,6 +27,9 @@
       {% endfor %}
       </tbody>
     </table>
+
+    {% endif %}
+
     <table class="table table-striped">
       <thead>
         <tr>

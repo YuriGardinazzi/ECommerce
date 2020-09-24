@@ -45,6 +45,7 @@ def get_search(request):
         if(suggested_items):
             for element in suggested_items:
                 items.append(Product.objects.get(id=element))
+
     context['suggested_items'] = items
     return render(request, 'search.html', context)
 
