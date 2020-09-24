@@ -1,8 +1,6 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from user_management.models import CustomUser
-
-
 # Create your models here.
 class MyCategory(models.Model):
     name = models.CharField(max_length=20, primary_key=True)
@@ -23,9 +21,13 @@ class Product(models.Model):
     producer = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     category = models.ForeignKey(MyCategory,on_delete=models.PROTECT)
 
+
 class Review(models.Model):
     id = models.AutoField(primary_key=True)
     review = models.TextField(max_length=400)
     rating = models.IntegerField(validators=[MaxValueValidator(5), MinValueValidator(0)])
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return 'review'

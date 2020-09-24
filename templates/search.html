@@ -2,9 +2,30 @@
 
 {% block content %}
     <div class="container">
-
     </div>
     <h3>Research for {{ request.POST.query }} Category: {{ request.POST.category }}</h3>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Suggested Items</th>
+          <th scope="col">Name</th>
+          <th scope="col">Description</th>
+          <th scope="col">Price</th>
+          <th scope ="col">Availability</th>
+        </tr>
+      </thead>
+      <tbody>
+          {% for product in suggested_items %}
+       <tr>
+          <td scope="col"><img width="100" height="70" class="img-fluid" src="{{ product.image.url }}"></td>
+          <td scope="col"> <a href="{% url 'product_management:product_detail' product.id %}">{{ product.name }}</a></td>
+          <td scope="col">{{ product.description }}</td>
+          <td scope="col">{{ product.price }}</td>
+          <td scope ="col">{{ product.quantity }}</td>
+       </tr>
+      {% endfor %}
+      </tbody>
+    </table>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -27,7 +48,6 @@
       {% endfor %}
       </tbody>
     </table>
-
 {% endblock %}
 
 {% block javascript %}

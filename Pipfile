@@ -6,10 +6,9 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-django = "*"
+Django = "*"
 django-crispy-forms = "*"
 django-bootstrap-modal-forms = "*"
 django-widget-tweaks = "*"
 self = "*"
-
-
+numpy = "*"
