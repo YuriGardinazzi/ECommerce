@@ -70,16 +70,14 @@
                          var pID = list.purchase_list[i].product_id;
                          var orderID = list.purchase_list[i].id;
 
+                         var isReceived = 'Not received';
                          var isSent = 'Not sent';
                          if (list.purchase_list[i].is_sent === true) {
                              isSent = 'Sent';
-                         }
-                         var isReceived = 'Not received';
-                         if (list.purchase_list[i].is_received === true){
-                             isReceived = 'Received';
-                         }else{
-                             if(isSent){
-                                 isReceived = '<button data-toggle="modal" data-target="#SendReceive" class=" btn btn-outline-info arrivedButton" id="purchase'+orderID+'"> Click here if it has arrived</button>';
+                             if (list.purchase_list[i].is_received === true) {
+                                isReceived = 'Received';
+                             }else{
+                                 isReceived = '<button data-toggle="modal" data-target="#SendReceive" class="btn btn-outline-info arrivedButton" id="purchase'+orderID+'">Click here if it has arrived </button>';
                              }
                          }
                          var row = '<tr>' +

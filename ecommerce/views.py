@@ -39,12 +39,12 @@ def get_search(request):
             print("qualche categoria, query presente")
             products = Product.objects.filter(name__contains=query, category_id=category)
             context['products'] = products
-    suggested_items = get_similary_items(request.user.id)
     items = []
-    if(suggested_items):
-
-        for element in suggested_items:
-            items.append(Product.objects.get(id=element))
+    if(request.user.is_authenticated):
+        suggested_items = get_similary_items(request.user.id)
+        if(suggested_items):
+            for element in suggested_items:
+                items.append(Product.objects.get(id=element))
     context['suggested_items'] = items
     return render(request, 'search.html', context)
 
