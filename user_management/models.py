@@ -60,7 +60,7 @@ class CustomUser(AbstractBaseUser):
     # personalized fieds
     first_name = models.CharField(max_length=30, default=None)
     last_name = models.CharField(max_length=30, default=None)
-    is_vendor= models.BooleanField(default=False)
+    is_vendor = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']  # required field other than email
@@ -76,12 +76,3 @@ class CustomUser(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
 
-'''
-class Person(models.Model):
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    email = models.EmailField(max_length=70, unique=True)
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-'''
