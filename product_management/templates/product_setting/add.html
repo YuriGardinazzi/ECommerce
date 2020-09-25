@@ -13,12 +13,20 @@
                 </div>
             {% endfor %}
         {% endif %}
-        <h1>Create Product</h1>
+    {% if request.user.is_vendor %}
+                 <h1>Create Product</h1>
 {#    <form method="post">{% csrf_token %}#}
 {#        {{ form|crispy }}#}
 {#        <input class="btn btn-success" type="submit" value="Create">#}
 {#    </form>#}
     {% crispy form %}
+    {% else %}
+       <p>
+            Your account is not setup to sell products, change your settings
+        <a href = '{% url 'user_management:account' %}'> Click Here</a>
+        </p>
+    {% endif %}
+
     </div>
 
 {% endblock %}

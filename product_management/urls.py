@@ -2,13 +2,14 @@ from django.conf import  settings
 from django.conf.urls import static
 from django.urls import path, include
 from product_management import views
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
+
 app_name = "product_management"
 urlpatterns = [
     path('management/', login_required(views.ProductManagement.as_view()), name='product_management'),
     path('management/<int:pk>/detail', views.ProductDetail.as_view(), name='product_detail'),
-    path('management/add', views.ProductAdd.as_view(),name='product_add'),
-    path('management/<int:pk>/change', views.ProductChange.as_view(), name='edit_product'),
+    path('management/add', login_required(views.ProductAdd.as_view()),name='product_add'),
+    path('management/<int:pk>/change', login_required(views.ProductChange.as_view()), name='edit_product'),
 
     path('ajax/add_review', views.add_review, name='add_review'),
     path('ajax/review_list', views.get_all_reviews, name='review_list'),

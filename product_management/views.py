@@ -3,13 +3,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Avg
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 
 from user_management.models import CustomUser
 from django.http import HttpResponse, JsonResponse
 
 from .forms import ProductCrispyForm
 from .models import Product, Review
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
 
@@ -99,13 +100,14 @@ def get_all_reviews(request):
         for single_review in review_list:
             print(CustomUser.objects.get(id=single_review['user_id']))
             authors_of_reviews.append(CustomUser.objects.get(id=single_review['user_id']).username)
-        data.append({'reviews_list': list(review_list), 'authors':list(authors_of_reviews)})
+        data.append({'reviews_list': list(review_list), 'authors': list(authors_of_reviews)})
 
         return JsonResponse(data, safe=False)
     return JsonResponse({"success": False})
+
 
 def get_average_rating(request):
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
         average_rating = Review.objects.filter(product_id=product_id).aggregate(value=Avg('rating'))
-        return JsonResponse({'average_rating':average_rating['value']})
+        return JsonResponse({'average_rating': average_rating['value']})
