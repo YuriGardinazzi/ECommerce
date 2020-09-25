@@ -1,16 +1,10 @@
-from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Avg
-from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.utils.decorators import method_decorator
-
 from user_management.models import CustomUser
 from django.http import HttpResponse, JsonResponse
-
 from .forms import ProductCrispyForm
 from .models import Product, Review
-from django.contrib.auth.decorators import login_required, permission_required
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
 
@@ -37,10 +31,6 @@ class ProductAdd(CreateView):
     model = Product
     template_name = 'product_setting/add.html'
     form_class = ProductCrispyForm
-
-    # fields = '__all__'
-    # fields = ('first_name', 'middle_name', 'last_name')
-    # success_url = reverse_lazy('product_management:product_management',kwargs.get('pk'))
     success_url = reverse_lazy('product_management:product_management')
 
     def form_valid(self, form):
