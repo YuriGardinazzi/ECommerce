@@ -1,3 +1,5 @@
+from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 from django.test import TestCase
 from django.urls import reverse_lazy
 
@@ -28,35 +30,35 @@ class TestReview(TestCase):
     def test_add_review_negative_rating(self):
         self.login_user()
         data = {
-            'type':'POST',
+            'type': 'POST',
             'product_id': self.p.id,
             'review': 'blablabla',
             'rating': -10,
             'user_id': self.u.id
         }
-        response = self.client.post(reverse_lazy('product_management:add_review'),data)
-        self.assertEqual(response.status_code,403,'Show 403 if rating is < 0')
+        response = self.client.post(reverse_lazy('product_management:add_review'), data)
+        self.assertEqual(response.status_code, 403, 'Show 403 if rating is < 0')
 
     def test_add_review_with_too_high_rating(self):
         self.login_user()
         data = {
-            'type':'POST',
+            'type': 'POST',
             'product_id': self.p.id,
             'review': 'blablabla',
             'rating': 6,
             'user_id': self.u.id
         }
-        response = self.client.post(reverse_lazy('product_management:add_review'),data)
-        self.assertEqual(response.status_code,403,'Show 403 if rating is > 5')
+        response = self.client.post(reverse_lazy('product_management:add_review'), data)
+        self.assertEqual(response.status_code, 403, 'Show 403 if rating is > 5')
 
     def test_add_correct_review(self):
         self.login_user()
         data = {
-            'type':'POST',
+            'type': 'POST',
             'product_id': self.p.id,
             'review': 'blablabla',
             'rating': 3,
             'user_id': self.u.id
         }
-        response = self.client.post(reverse_lazy('product_management:add_review'),data)
-        self.assertEqual(response.status_code,200,'200 if review is correct')
+        response = self.client.post(reverse_lazy('product_management:add_review'), data)
+        self.assertEqual(response.status_code, 200, '200 if review is correct')
