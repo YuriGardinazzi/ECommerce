@@ -85,6 +85,14 @@ def add_review(request):
         review.product_id = request.POST.get('product_id')
         review.review = request.POST.get('review')
         review.rating = request.POST.get('rating')
+
+        if(int(review.rating) < 0 or int(review.rating) > 5):
+
+            data['success'] = False
+            response = JsonResponse(data)
+            response.status_code=403
+            return response
+
         review.user_id = request.POST.get('user_id')
         review.save()
         data['success'] = True
@@ -98,7 +106,6 @@ def get_all_reviews(request):
         product_id = request.POST.get('product_id')
         review_list = Review.objects.filter(product_id=product_id).values()
         for single_review in review_list:
-            print(CustomUser.objects.get(id=single_review['user_id']))
             authors_of_reviews.append(CustomUser.objects.get(id=single_review['user_id']).username)
         data.append({'reviews_list': list(review_list), 'authors': list(authors_of_reviews)})
 

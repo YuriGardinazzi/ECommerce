@@ -43,7 +43,12 @@ class TestUserView(TestCase):
         response = self.client.get(reverse_lazy('user_management:account'))
         self.assertEqual(response.status_code, 302, 'User not logged in should be redirected')
 
-    def test_standard_product_management_view(self):
+    def test_standard_user_product_management_view(self):
+        self.login_user()
+        response = self.client.get(reverse_lazy('product_management:product_management'))
+        self.assertContains(response, 'Your account is not setup to sell products,')
+
+    def test_standard_user_product_add_view(self):
         self.login_user()
         response = self.client.get(reverse_lazy('product_management:product_management'))
         self.assertContains(response, 'Your account is not setup to sell products,')
