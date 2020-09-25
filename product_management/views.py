@@ -75,9 +75,8 @@ def add_review(request):
         review.product_id = request.POST.get('product_id')
         review.review = request.POST.get('review')
         review.rating = request.POST.get('rating')
-
+        #rating not valid
         if(int(review.rating) < 0 or int(review.rating) > 5):
-
             data['success'] = False
             response = JsonResponse(data)
             response.status_code=403

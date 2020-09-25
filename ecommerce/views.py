@@ -36,7 +36,6 @@ def get_search(request):
             products = Product.objects.filter(name__contains=query)
             context['products'] = products
         else:
-            print("qualche categoria, query presente")
             products = Product.objects.filter(name__contains=query, category_id=category)
             context['products'] = products
     items = []
