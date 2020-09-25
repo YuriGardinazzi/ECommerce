@@ -1,5 +1,6 @@
 # UCommerce - How to run this project
-This project uses **python3.8** and **pipenv** to load the environment
+This project uses **python3.8** and **pipenv** to load the environment.
+
 Be sure to install both on your system.
 
 Go inside the project folder
