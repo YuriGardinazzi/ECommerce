@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.test import TestCase
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 
 from .models import Review, Product, MyCategory
 from user_management.models import CustomUser
@@ -22,7 +22,7 @@ class TestReview(TestCase):
         self.c = MyCategory.objects.create(name='usato', description='blablabla')
 
         self.p = Product.objects.create(name='prodotto', description='qualcosa', price=100, quantity=10,
-                                        category_id=self.c.name, producer_id=self.u.id)
+                                        category_id=self.c.name, producer_id=self.u.id, image='static/images/choose.png')
 
     def login_user(self):
         self.client.login(email="prova@email.com", passwrod="rootroot")
@@ -62,3 +62,15 @@ class TestReview(TestCase):
         }
         response = self.client.post(reverse_lazy('product_management:add_review'), data)
         self.assertEqual(response.status_code, 200, '200 if review is correct')
+
+    def test_display_correct_detail_template(self):
+        response = self.client.get('/product/management/'+str(self.p.id)+'/detail')
+        self.assertTemplateUsed(response, 'product_setting/detail.html')
+
+    def test_display_correct_management_template(self):
+        response = self.client.get('/product/management/')
+        self.assertTemplateUsed(response, 'product_setting/product_management.html')
+
+    def test_display_correct_change_template(self):
+        response = self.client.get('/product/management/'+str(self.p.id)+'/change')
+        self.assertTemplateUsed(response, 'product_setting/update_product.html')
